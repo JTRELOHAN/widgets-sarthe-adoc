@@ -1,0 +1,1413 @@
+/* ==========================================================================
+   Widget Open System « Produit » — fiche billet ADDOCK (afficheDetailBillet)
+   Habillage moderne · à charger sur la page qui intègre le widget
+   --------------------------------------------------------------------------
+   • Aucune modification du HTML n'est nécessaire.
+   • L'ordre de chargement n'a pas d'importance : chaque sélecteur est préfixé
+     par  .OsProduit.ADOC:is(.api,#resa)  — le « #resa » n'a pas besoin
+     d'exister dans la page, il sert uniquement à donner aux règles un poids
+     d'identifiant pour passer devant le thème Open System (y compris ses
+     !important). Seuls les widgets ADDOCK sont concernés : les autres widgets
+     Open System de la page ne sont pas touchés.
+   • Pour adapter à une charte : modifiez uniquement les variables ci-dessous.
+   • La mise en page s'adapte à la largeur réelle du widget (container
+     queries) : 2 colonnes à partir de 860 px de large, 1 colonne en dessous.
+   ========================================================================== */
+
+:root {
+  /* Couleurs */
+  --resa-primary: #1f6b52;        /* boutons, dates et horaires disponibles */
+  --resa-primary-hover: #17533f;
+  --resa-primary-soft: #e4f1eb;   /* fonds teintés (dates dispo, tags) */
+  --resa-on-primary: #ffffff;
+  --resa-ink: #17201d;            /* titres, prix */
+  --resa-text: #34403c;           /* texte courant */
+  --resa-muted: #67736e;          /* textes secondaires */
+  --resa-faint: #a9b3ae;          /* éléments inactifs */
+  --resa-line: #dfe5e2;           /* bordures, séparateurs */
+  --resa-soft: #f3f6f4;           /* fonds neutres */
+  --resa-surface: #ffffff;
+  --resa-danger: #b3362d;         /* complet, erreurs */
+  --resa-danger-soft: #fbeceb;
+
+  /* Typographie : remplacez par « inherit » pour reprendre la police du site */
+  --resa-font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  /* Formes et mise en page */
+  --resa-radius-lg: 20px;
+  --resa-radius: 12px;
+  --resa-max-width: 1200px;       /* largeur maximale du widget (940 px à l'origine) */
+  --resa-aside: 380px;            /* largeur de la carte de réservation */
+  --resa-sticky-top: 24px;        /* à augmenter si le site a un en-tête fixe */
+  --resa-shadow: 0 1px 2px rgba(23, 32, 29, .06), 0 16px 40px -16px rgba(23, 32, 29, .22);
+}
+
+
+/* --------------------------------------------------------------------------
+   1. Base : police, couleurs, variables du thème Open System
+   -------------------------------------------------------------------------- */
+
+.OsProduit.ADOC:is(.api,#resa) {
+  --os-btn-primary: var(--resa-primary);
+  --os-btn-primary-hover: var(--resa-primary-hover);
+  --os-btn-text-color-primary: var(--resa-on-primary);
+  --os-btn-text-color-primary-hover: var(--resa-on-primary);
+  --os-btn-radius: var(--resa-radius);
+  --os-color-nom-produit: var(--resa-primary);
+  --os-color-prix: var(--resa-ink);
+  --os-text-color: var(--resa-text);
+  --os-main-font-theme: var(--resa-font);
+
+  font-family: var(--resa-font);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--resa-text);
+  text-align: left;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.OsProduit.ADOC:is(.api,#resa) * {
+  font-family: inherit;
+  letter-spacing: normal;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .Clear,
+.OsProduit.ADOC:is(.api,#resa) .clear {
+  display: none;
+}
+
+
+/* --------------------------------------------------------------------------
+   2. Mise en page : grille titre / galerie / carte de réservation / contenu
+   -------------------------------------------------------------------------- */
+
+/* Le conteneur d'intégration est bridé à 940 px par le thème d'origine */
+[id^="widget-produit-"]:is(.WidgetDirect,#resa):has(> .OsProduit.ADOC) {
+  max-width: var(--resa-max-width);
+  padding: 0;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet {
+  container: resa / inline-size;
+  max-width: none;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .BlocDescriptionDetail {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    "titre"
+    "vendeur"
+    "galerie"
+    "resa"
+    "howto"
+    "desc"
+    "contact";
+  align-items: start;
+  gap: 0;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+}
+
+/* Les deux colonnes d'origine s'effacent : leurs enfants deviennent des
+   cellules de la grille ci-dessus. */
+.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .detailbillet,
+.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .BlocMoteurReservation {
+  display: contents;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .BlocDescriptionDetail > .Titre      { grid-area: titre; }
+.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .BlocDescriptionDetail > .NomVendeur { grid-area: vendeur; }
+.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .detailbillet > .OsColDroiteInt      { grid-area: galerie; }
+.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .detailbillet > .OsColGaucheInt      { grid-area: desc; }
+.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .BlocMoteurReservation > .Cadre          { grid-area: resa; }
+.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .BlocMoteurReservation > .howTo          { grid-area: howto; }
+.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .BlocMoteurReservation > .contactVendeur { grid-area: contact; }
+
+.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .detailbillet > .OsColDroiteInt,
+.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .detailbillet > .OsColGaucheInt {
+  width: auto;
+  min-width: 0;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  float: none !important;
+}
+
+/* Sans description : la carte seule, centrée */
+.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet.SansDescription .BlocDescriptionDetail {
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+/* Grand écran : contenu à gauche, carte de réservation collante à droite */
+@container resa (min-width: 860px) {
+  .OsProduit.ADOC:is(.api,#resa) .OsDetailBillet.AvecDescription .BlocDescriptionDetail {
+    grid-template-columns: minmax(0, 1fr) minmax(320px, var(--resa-aside));
+    grid-template-rows: auto auto auto auto auto auto 1fr;
+    grid-template-areas:
+      "titre   resa"
+      "vendeur resa"
+      "galerie resa"
+      "desc    resa"
+      "howto   resa"
+      "contact resa"
+      ".       resa";
+    column-gap: 48px;
+  }
+
+  .OsProduit.ADOC:is(.api,#resa) .OsDetailBillet.AvecDescription .BlocMoteurReservation > .Cadre {
+    position: sticky;
+    top: var(--resa-sticky-top);
+    margin-top: 0;
+  }
+
+  .OsProduit.ADOC:is(.api,#resa) .OsDetailBillet.AvecDescription .BlocMoteurReservation > .howTo {
+    margin-top: 40px;
+  }
+}
+
+
+/* --------------------------------------------------------------------------
+   3. Titre et galerie
+   -------------------------------------------------------------------------- */
+
+.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .BlocDescriptionDetail > .Titre {
+  margin: 0;
+  padding: 0;
+  font-size: 30px;
+  font-size: clamp(24px, 1.8cqi + 14px, 36px);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  color: var(--resa-ink);
+  text-align: left;
+  text-transform: none;
+  text-wrap: balance;
+  background: none;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .BlocDescriptionDetail > .NomVendeur {
+  margin: 8px 0 0;
+  padding: 0;
+  font-size: 15px;
+  color: var(--resa-muted);
+  text-align: left;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .BlocDescriptionDetail > .NomVendeur:empty {
+  display: none;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .detailbillet > .OsColDroiteInt {
+  margin-top: 20px;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .gallery-swiper {
+  max-height: none;
+  padding: 0;
+  border-radius: var(--resa-radius-lg);
+  overflow: hidden;
+  background: var(--resa-soft);
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .gallery-swiper .swiper-slide {
+  max-height: none;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .gallery-swiper img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 520px;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .gallery-swiper .swiper-pagination-bullet {
+  background: #fff;
+  opacity: .6;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .gallery-swiper .swiper-pagination-bullet-active {
+  opacity: 1;
+}
+
+
+/* --------------------------------------------------------------------------
+   4. Carte de réservation
+   -------------------------------------------------------------------------- */
+
+.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .BlocMoteurReservation > .Cadre {
+  position: relative;
+  margin: 20px 0 0;
+  padding: 24px;
+  background: var(--resa-surface);
+  border: 1px solid var(--resa-line);
+  border-radius: var(--resa-radius-lg);
+  box-shadow: var(--resa-shadow);
+}
+
+@container resa (max-width: 420px) {
+  .OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .BlocMoteurReservation > .Cadre {
+    padding: 18px;
+  }
+}
+
+/* Prix indicatif */
+.OsProduit.ADOC:is(.api,#resa) .TarifIndicatifBillet {
+  display: block;
+  margin: 0 0 18px;
+  padding: 0 0 18px;
+  border: 0;
+  border-bottom: 1px solid var(--resa-line);
+  background: none;
+  text-align: left;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .TarifIndicatifBillet .osw-bloc-prix {
+  display: flex !important;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: flex-start;
+  gap: 2px 8px;
+  margin: 0 !important;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .TarifIndicatifBillet .osw-bloc-prix .osw-prix-prefixe,
+.OsProduit.ADOC:is(.api,#resa) .TarifIndicatifBillet .osw-bloc-prix .osw-prix-suffixe {
+  display: inline !important;
+  padding: 0 !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  line-height: 1.3 !important;
+  color: var(--resa-muted) !important;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .TarifIndicatifBillet .osw-bloc-prix .osw-prix .osw-prix-valeur {
+  padding: 0;
+  font-size: 32px !important;
+  font-weight: 700 !important;
+  line-height: 1.1 !important;
+  letter-spacing: -0.02em;
+  color: var(--resa-ink) !important;
+  font-variant-numeric: tabular-nums;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .TarifIndicatifBillet .osw-prix-valeur :is(.osw-montant-partie-decimale, .osw-montant-symbole-monnaie) {
+  font-size: .62em !important;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+/* Étapes : contrôle segmenté qui affiche aussi les choix faits */
+.OsProduit.ADOC:is(.api,#resa) .TimeLineContainer {
+  display: grid !important;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: 4px;
+  margin: 0 0 22px !important;
+  padding: 4px;
+  background: var(--resa-soft);
+  border-radius: var(--resa-radius);
+}
+
+.OsProduit.ADOC:is(.api,#resa) .TimeLineContainer .Etape {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 0;
+  margin: 0;
+  padding: 9px 6px;
+  border-radius: 9px;
+  color: var(--resa-faint);
+  transition: background-color .15s ease, color .15s ease;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .TimeLineContainer .Etape::after {
+  content: none !important;
+  display: none !important;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .TimeLineContainer .Etape .IconeEtape {
+  display: flex;
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  background: none !important;
+  font-size: 0;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .TimeLineContainer .Etape .IconeEtape::before {
+  width: auto;
+  height: auto;
+  margin: 0;
+  font-size: 13px;
+  line-height: 1;
+  color: inherit !important;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .TimeLineContainer .Etape .LabelEtape {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .TimeLineContainer .Etape.EtapeClickable {
+  color: var(--resa-primary);
+}
+
+.OsProduit.ADOC:is(.api,#resa) .TimeLineContainer .Etape.EtapeClickable:not(.EtapeActive):hover {
+  background: rgba(255, 255, 255, .7);
+}
+
+.OsProduit.ADOC:is(.api,#resa) .TimeLineContainer .Etape.EtapeActive {
+  background: var(--resa-surface);
+  color: var(--resa-ink);
+  box-shadow: 0 1px 2px rgba(23, 32, 29, .08), 0 2px 8px -2px rgba(23, 32, 29, .14);
+}
+
+.OsProduit.ADOC:is(.api,#resa) .TimeLineContainer .Etape.EtapeActive .IconeEtape::before {
+  color: var(--resa-primary) !important;
+}
+
+@container resa (max-width: 300px) {
+  .OsProduit.ADOC:is(.api,#resa) .TimeLineContainer .Etape .IconeEtape {
+    display: none;
+  }
+}
+
+/* Titres d'étape : « Combien ? », « Quel jour ? », « Quelle heure ? » */
+.OsProduit.ADOC:is(.api,#resa) .Cadre .BlocTitre {
+  margin: 0 0 10px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-size: 17px;
+  font-weight: 650;
+  line-height: 1.3;
+  color: var(--resa-ink);
+  text-align: left;
+  text-transform: none;
+}
+
+
+/* --------------------------------------------------------------------------
+   5. Étape « Combien ? » : quantités
+   -------------------------------------------------------------------------- */
+
+.OsProduit.ADOC:is(.api,#resa) .OsTarifBillet {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsTarifBillet .OsTableTarif {
+  display: flex;
+  flex-direction: column;
+  margin: 0 0 14px;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsTarifBillet :is(.UnitQuantity, .ExtraQuantity) .QuantityContainer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  padding: 14px 0;
+  border: 0;
+  border-bottom: 1px solid var(--resa-line);
+  border-radius: 0;
+  background: none;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsTarifBillet :is(.UnitQuantity, .ExtraQuantity):last-child .QuantityContainer {
+  border-bottom: 0;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsTarifBillet .QuantityContainer .Caption {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  padding: 0;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsTarifBillet .QuantityContainer .Caption .Title {
+  font-size: 16px !important;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--resa-ink);
+  text-transform: none;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsTarifBillet .QuantityContainer .Caption .SousTitre {
+  padding: 0;
+  font-size: 13px;
+  line-height: 1.35;
+  color: var(--resa-muted);
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsTarifBillet .QuantityContainer .Prix .osw-bloc-prix,
+.OsProduit.ADOC:is(.api,#resa) .OsTarifBillet .QuantityContainer .Prix .osw-prix {
+  margin: 0;
+  padding: 0;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsTarifBillet .QuantityContainer .Prix .osw-prix-valeur,
+.OsProduit.ADOC:is(.api,#resa) .OsTarifBillet .QuantityContainer .Prix .osw-prix-valeur * {
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  line-height: 1.35 !important;
+  color: var(--resa-muted) !important;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Sélecteur − 0 + */
+.OsProduit.ADOC:is(.api,#resa) .OsTarifBillet .QuantityContainer .Quantities {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 2px;
+  min-width: 0;
+  max-width: none;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsTarifBillet .QuantityContainer .Quantities .QuantityControls {
+  display: contents;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsTarifBillet .QuantityContainer .Quantities .Quantity {
+  order: 2;
+  display: block;
+  flex: 0 0 auto;
+  width: 34px;
+  padding: 0;
+  background: none;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--resa-ink);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsTarifBillet .QuantityContainer :is(.BoutonPlus, .BoutonMinus) {
+  display: block;
+  flex: 0 0 auto;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border: 1px solid var(--resa-line);
+  border-radius: 999px;
+  background-color: var(--resa-surface);
+  background-image: linear-gradient(currentColor, currentColor), linear-gradient(currentColor, currentColor);
+  background-size: 12px 2px, 2px 12px;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: var(--resa-ink);
+  font-size: 0 !important;
+  line-height: 0 !important;
+  cursor: pointer;
+  transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsTarifBillet .QuantityContainer .BoutonMinus {
+  order: 1;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 12px 2px;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsTarifBillet .QuantityContainer .BoutonPlus {
+  order: 3;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsTarifBillet .QuantityContainer :is(.BoutonPlus, .BoutonMinus):not(.Inactif):hover {
+  border-color: var(--resa-primary);
+  background-color: var(--resa-primary-soft);
+  color: var(--resa-primary);
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsTarifBillet .QuantityContainer :is(.BoutonPlus, .BoutonMinus).Inactif {
+  color: var(--resa-faint);
+  border-color: var(--resa-line);
+  background-color: var(--resa-surface);
+  cursor: default;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsTarifBillet .QuantityContainer.QuantiteSuperieurA0 .Quantities .Quantity {
+  background: none;
+  color: var(--resa-primary);
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsTarifBillet .BlocPrivatiser {
+  margin: 0;
+  padding: 0 0 12px;
+}
+
+
+/* --------------------------------------------------------------------------
+   6. Boutons
+   -------------------------------------------------------------------------- */
+
+.OsProduit.ADOC:is(.api,#resa) .WidgetDirect .btn-valider {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 100% !important;
+  min-height: 50px;
+  margin: 6px 0 0 !important;
+  padding: 0 20px !important;
+  border: 0 !important;
+  border-radius: var(--resa-radius) !important;
+  background: var(--resa-primary) !important;
+  box-shadow: none !important;
+  color: var(--resa-on-primary) !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  line-height: 1.2 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  cursor: pointer;
+  transition: background-color .15s ease;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .WidgetDirect .btn-valider span {
+  color: inherit !important;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .WidgetDirect .btn-valider:hover {
+  background: var(--resa-primary-hover) !important;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .WidgetDirect .btn-valider.btn-disabled,
+.OsProduit.ADOC:is(.api,#resa) .WidgetDirect .btn-valider.btn-disabled:hover {
+  background: var(--resa-soft) !important;
+  color: var(--resa-faint) !important;
+  opacity: 1 !important;
+  cursor: not-allowed;
+}
+
+/* Boutons « Offrir » des bons cadeaux : largeur naturelle */
+.OsProduit.ADOC:is(.api,#resa) .WidgetDirect .BonsContainer .btn-valider {
+  width: auto !important;
+  margin: 0 0 0 auto !important;
+}
+
+/* Lien « Précédent » */
+.OsProduit.ADOC:is(.api,#resa) .BlocPrecedent {
+  margin: 12px 0 0;
+  justify-content: flex-start;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .BlocPrecedent .btn-precedent {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 8px;
+  margin: 0 !important;
+  padding: 6px 0 !important;
+  border-radius: 8px;
+  color: var(--resa-muted) !important;
+  font-size: 14px !important;
+  font-weight: 500;
+  text-transform: none !important;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .BlocPrecedent .btn-precedent::before {
+  width: auto;
+  height: auto;
+  margin: 0;
+  font-size: 12px;
+  line-height: 1;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .BlocPrecedent .btn-precedent span {
+  color: inherit !important;
+  letter-spacing: 0;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .BlocPrecedent .btn-precedent:hover {
+  color: var(--resa-ink) !important;
+}
+
+
+/* --------------------------------------------------------------------------
+   7. Étape « Quel jour ? » : calendrier
+   -------------------------------------------------------------------------- */
+
+.OsProduit.ADOC:is(.api,#resa) .OsBlocConteneurDatepicker {
+  padding: 0 !important;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsDatePicker.OsDatePickerInline.ui-datepicker {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsDatePicker.ui-datepicker * {
+  font-family: inherit !important;
+}
+
+/* En-tête : ‹ Décembre 2026 › */
+.OsProduit.ADOC:is(.api,#resa) .OsDatePicker .ui-datepicker-header {
+  display: flex !important;
+  align-items: center;
+  margin: 0 0 8px;
+  padding: 0 !important;
+  border: 0 !important;
+  background: none !important;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsDatePicker .ui-datepicker-header .ui-datepicker-title {
+  order: 2;
+  flex: 1 1 auto;
+  margin: 0 !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  line-height: 38px !important;
+  color: var(--resa-ink) !important;
+  text-align: center !important;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsDatePicker .ui-datepicker-header .ui-datepicker-title span {
+  color: inherit !important;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsDatePicker .ui-datepicker-header > a:is(.ui-datepicker-prev, .ui-datepicker-next) {
+  position: static !important;
+  display: grid !important;
+  place-items: center;
+  flex: 0 0 38px;
+  width: 38px !important;
+  height: 38px !important;
+  border: 1px solid var(--resa-line) !important;
+  border-radius: 999px !important;
+  background: var(--resa-surface) !important;
+  color: var(--resa-ink);
+  cursor: pointer;
+  transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsDatePicker .ui-datepicker-header > a.ui-datepicker-prev { order: 1; }
+.OsProduit.ADOC:is(.api,#resa) .OsDatePicker .ui-datepicker-header > a.ui-datepicker-next { order: 3; }
+
+.OsProduit.ADOC:is(.api,#resa) .OsDatePicker .ui-datepicker-header > a:is(.ui-datepicker-prev, .ui-datepicker-next):hover {
+  border-color: var(--resa-primary) !important;
+  background: var(--resa-primary-soft) !important;
+  color: var(--resa-primary);
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsDatePicker .ui-datepicker-header > a.ui-state-disabled {
+  opacity: .35 !important;
+  cursor: not-allowed !important;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsDatePicker .ui-datepicker-header > a .ui-icon {
+  position: static !important;
+  display: grid !important;
+  place-items: center;
+  width: 100% !important;
+  height: 100% !important;
+  margin: 0 !important;
+  overflow: visible;
+  background: none !important;
+  font-size: 0 !important;
+  text-indent: 0;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsDatePicker .ui-datepicker-header > a .ui-icon::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* Chevrons dessinés en CSS (indépendants des images du thème) */
+.OsProduit.ADOC:is(.api,#resa) .OsDatePicker .ui-datepicker-header > a .ui-icon::before {
+  content: "" !important;
+  display: block !important;
+  width: 8px !important;
+  height: 8px !important;
+  border: solid currentColor;
+  border-width: 0 0 2px 2px;
+  background: none !important;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsDatePicker .ui-datepicker-header > a.ui-datepicker-prev .ui-icon::before {
+  margin-left: 3px;
+  transform: rotate(45deg);
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsDatePicker .ui-datepicker-header > a.ui-datepicker-next .ui-icon::before {
+  margin-right: 3px;
+  transform: rotate(-135deg);
+}
+
+/* Grille des jours */
+.OsProduit.ADOC:is(.api,#resa) .OsDatePicker table.ui-datepicker-calendar {
+  width: 100% !important;
+  margin: 0 !important;
+  border-collapse: separate !important;
+  border-spacing: 0 2px;
+  table-layout: fixed;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsDatePicker thead,
+.OsProduit.ADOC:is(.api,#resa) .OsDatePicker thead tr {
+  background: none !important;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsDatePicker th {
+  padding: 6px 0 !important;
+  border: 0 !important;
+  background: none !important;
+  color: var(--resa-muted) !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  text-align: center !important;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsDatePicker th span {
+  border: 0 !important;
+  color: inherit !important;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsDatePicker td {
+  padding: 1px !important;
+  border: 0 !important;
+  background: none !important;
+  text-align: center !important;
+  opacity: 1 !important;
+}
+
+/* Jour : état par défaut (non disponible) */
+.OsProduit.ADOC:is(.api,#resa) .OsDatePicker td :is(a, span).ui-state-default {
+  display: grid !important;
+  place-items: center;
+  width: 100% !important;
+  max-width: 44px;
+  height: auto !important;
+  aspect-ratio: 1;
+  margin: 0 auto !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: var(--resa-faint) !important;
+  font-size: 15px !important;
+  font-weight: 500 !important;
+  line-height: 1 !important;
+  text-decoration: none !important;
+  text-shadow: none !important;
+  opacity: 1 !important;
+  font-variant-numeric: tabular-nums;
+  transition: background-color .15s ease, color .15s ease;
+}
+
+/* Jour disponible */
+.OsProduit.ADOC:is(.api,#resa) .OsDatePicker td:is(.DatepickerDateDispo, .etat1) a.ui-state-default {
+  background: var(--resa-primary-soft) !important;
+  color: var(--resa-primary) !important;
+  font-weight: 650 !important;
+  cursor: pointer;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsDatePicker td:is(.DatepickerDateDispo, .etat1) a.ui-state-default:hover {
+  background: var(--resa-primary) !important;
+  color: var(--resa-on-primary) !important;
+}
+
+/* Jour présélectionné par le widget : simple anneau */
+.OsProduit.ADOC:is(.api,#resa) .OsDatePicker td.DatepickerDateDispo.ui-datepicker-current-day a.ui-state-default:not(:hover) {
+  box-shadow: inset 0 0 0 2px var(--resa-primary) !important;
+}
+
+/* Jour choisi (retour arrière depuis l'étape horaire) */
+.OsProduit.ADOC:is(.api,#resa) .OsDatePicker td.DatepickerDateDispo.DatepickerDateEnCours a.ui-state-default {
+  background: var(--resa-primary) !important;
+  color: var(--resa-on-primary) !important;
+}
+
+/* Jour complet */
+.OsProduit.ADOC:is(.api,#resa) .OsDatePicker td:is(.DatepickerDateComplet, .etat0) span.ui-state-default {
+  color: var(--resa-danger) !important;
+  text-decoration: line-through !important;
+  cursor: not-allowed;
+}
+
+/* Disponible mais non réservable en ligne */
+.OsProduit.ADOC:is(.api,#resa) .OsDatePicker td.ui-state-disabled.etat1 span.ui-state-default {
+  background: var(--resa-primary-soft) !important;
+  color: var(--resa-primary) !important;
+  opacity: .5 !important;
+}
+
+/* Légende */
+.OsProduit.ADOC:is(.api,#resa) .os-widget-calendar-legende {
+  padding: 14px 0 0;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .os-widget-calendar-legende .os-liste-legende {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 6px 18px;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .os-widget-calendar-legende .os-item-liste-legende {
+  flex: 0 0 auto;
+  font-size: 13px;
+  color: var(--resa-muted);
+  text-align: left;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .os-widget-calendar-legende .os-item-liste-legende span::before {
+  width: 10px;
+  height: 10px;
+  margin-right: 7px;
+  border-radius: 999px;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .os-widget-calendar-legende .legende-disponible span::before {
+  background-color: var(--resa-primary-soft);
+  box-shadow: inset 0 0 0 1.5px var(--resa-primary);
+}
+
+.OsProduit.ADOC:is(.api,#resa) .os-widget-calendar-legende .legende-complet span::before {
+  background-color: var(--resa-danger);
+}
+
+.OsProduit.ADOC:is(.api,#resa) .os-widget-calendar-legende .legende-votre-selection span::before {
+  background-color: var(--resa-primary);
+}
+
+
+/* --------------------------------------------------------------------------
+   8. Étape « Quelle heure ? » : créneaux
+   -------------------------------------------------------------------------- */
+
+.OsProduit.ADOC:is(.api,#resa) .OsBlocHourline {
+  padding: 0;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .BlocHoraires :is(.Matin, .ApresMidi) .Label {
+  display: block;
+  width: auto;
+  height: auto;
+  min-height: 0;
+  padding: 0;
+  margin: 14px 0 8px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--resa-muted);
+  text-align: left;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .BlocHoraires .listehoraires {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
+  gap: 8px;
+  width: 100%;
+  padding: 0 !important;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .listehoraires a.blochh {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  width: auto !important;
+  margin: 0 !important;
+  padding: 12px 8px !important;
+  border: 1px solid transparent !important;
+  border-radius: var(--resa-radius) !important;
+  background: var(--resa-primary-soft) !important;
+  box-shadow: none !important;
+  color: var(--resa-primary) !important;
+  text-decoration: none !important;
+  transform: none !important;
+  transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .listehoraires a.blochh .hh_heure {
+  font-size: 16px !important;
+  font-weight: 600;
+  line-height: 1.2 !important;
+  color: inherit !important;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Places restantes */
+.OsProduit.ADOC:is(.api,#resa) .listehoraires a.blochh .nbplacehh {
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: none !important;
+  color: var(--resa-muted) !important;
+  font-size: 12px !important;
+  line-height: 1.3 !important;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .listehoraires a.blochh .nbplacehh * {
+  color: inherit !important;
+  font-size: inherit !important;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .listehoraires a.blochh.Disponible:hover {
+  border-color: var(--resa-primary) !important;
+  background: var(--resa-primary) !important;
+  color: var(--resa-on-primary) !important;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .listehoraires a.blochh.Disponible:hover .nbplacehh {
+  color: inherit !important;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .listehoraires a.blochh:is(.Complet, .Inactif),
+.OsProduit.ADOC:is(.api,#resa) .listehoraires a.blochh:is(.Complet, .Inactif):hover {
+  border-color: transparent !important;
+  background: var(--resa-soft) !important;
+  color: var(--resa-faint) !important;
+  cursor: not-allowed;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .listehoraires a.blochh.Complet .hh_heure {
+  text-decoration: line-through;
+  text-decoration-color: var(--resa-danger);
+}
+
+.OsProduit.ADOC:is(.api,#resa) .listehoraires a.blochh.current,
+.OsProduit.ADOC:is(.api,#resa) .listehoraires a.blochh.current:hover {
+  border-color: var(--resa-primary) !important;
+  background: var(--resa-primary) !important;
+  color: var(--resa-on-primary) !important;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .listehoraires a.blochh.current .nbplacehh {
+  color: inherit !important;
+  opacity: .85;
+}
+
+
+/* --------------------------------------------------------------------------
+   9. Chargement, messages, formulaires (questions, bons cadeaux)
+   -------------------------------------------------------------------------- */
+
+.OsProduit.ADOC:is(.api,#resa) .OsMoteurAttente {
+  border-radius: inherit;
+  background-color: rgba(255, 255, 255, .75) !important;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsMoteurAttente::before {
+  width: 32px;
+  height: 32px;
+  margin: -16px 0 0 -16px;
+  border: 3px solid var(--resa-primary-soft);
+  border-top-color: var(--resa-primary);
+  border-radius: 999px;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .MessageErreur:empty {
+  display: none;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .MessageErreur {
+  margin: 8px 0 0;
+  color: var(--resa-danger);
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .BlockErreur {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border-radius: var(--resa-radius);
+  background: var(--resa-danger-soft);
+}
+
+.OsProduit.ADOC:is(.api,#resa) .BlockErreur .MessageErreur {
+  margin: 0;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .WidgetDirect .PasDispo {
+  min-height: 120px;
+  padding: 16px;
+  border-radius: var(--resa-radius);
+  background: var(--resa-soft);
+  color: var(--resa-muted);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.OsProduit.ADOC:is(.api,#resa) :is(input[type="text"], input[type="email"], input[type="tel"], input[type="number"], textarea, select) {
+  width: 100% !important;
+  min-height: 46px !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 11px 14px !important;
+  border: 1px solid var(--resa-line) !important;
+  border-radius: var(--resa-radius) !important;
+  background: var(--resa-surface) !important;
+  box-shadow: none !important;
+  color: var(--resa-ink) !important;
+  font-size: 16px !important;
+  line-height: 1.4 !important;
+  text-indent: 0 !important;
+}
+
+.OsProduit.ADOC:is(.api,#resa) :is(input, textarea, select):focus {
+  border-color: var(--resa-primary) !important;
+  outline: 3px solid var(--resa-primary-soft);
+  outline-offset: 0;
+}
+
+.OsProduit.ADOC:is(.api,#resa) :is(input, textarea).error {
+  border-color: var(--resa-danger) !important;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .inputField label {
+  margin: 0 0 4px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--resa-ink);
+}
+
+.OsProduit.ADOC:is(.api,#resa) .inputField .requiredSign {
+  color: var(--resa-danger);
+}
+
+.OsProduit.ADOC:is(.api,#resa) .WidgetDirect .BonsContainer .Bon {
+  padding: 16px;
+  border: 1px solid var(--resa-line);
+  border-radius: var(--resa-radius);
+  background: var(--resa-surface);
+}
+
+.OsProduit.ADOC:is(.api,#resa) .WidgetDirect .BonsContainer .Bon .TitreBon {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--resa-ink);
+  text-transform: none;
+}
+
+
+/* --------------------------------------------------------------------------
+   10. Rassurance : « Comment ça marche ? » et vendeur
+   -------------------------------------------------------------------------- */
+
+.OsProduit.ADOC:is(.api,#resa) .howTo {
+  margin: 20px 0 0;
+  padding: 20px;
+  border: 0;
+  border-radius: var(--resa-radius-lg);
+  background: var(--resa-soft);
+  color: var(--resa-text);
+}
+
+.OsProduit.ADOC:is(.api,#resa) .howTo .howToTitle {
+  margin: 0 0 16px;
+  font-size: 16px;
+  font-weight: 650;
+  line-height: 1.3;
+  color: var(--resa-ink);
+}
+
+.OsProduit.ADOC:is(.api,#resa) .howTo .howToStep {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  width: auto;
+  margin: 0 0 14px;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .howTo .howToStep:last-child {
+  margin-bottom: 0;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .howTo .howToStep .Icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 38px;
+  width: 38px;
+  max-width: none;
+  height: 38px;
+  border-radius: 999px;
+  background: var(--resa-surface);
+  color: var(--resa-primary);
+  transform: none;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .howTo .howToStep .Icon::before {
+  width: auto;
+  height: auto;
+  margin: 0;
+  font-size: 15px;
+  line-height: 1;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .howTo .howToStep .Content {
+  flex: 1 1 auto;
+  gap: 2px;
+  padding: 0;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .howTo .howToStep .Content .howToNumber {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--resa-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .howTo .howToStep .Content .howToText {
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--resa-text);
+}
+
+/* Trois étapes côte à côte quand la place le permet */
+@container resa (min-width: 620px) {
+  .OsProduit.ADOC:is(.api,#resa) .OsDetailBillet.AvecDescription .howTo {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0 24px;
+  }
+
+  .OsProduit.ADOC:is(.api,#resa) .OsDetailBillet.AvecDescription .howTo .howToTitle {
+    grid-column: 1 / -1;
+  }
+
+  .OsProduit.ADOC:is(.api,#resa) .OsDetailBillet.AvecDescription .howTo .howToStep {
+    flex-direction: column;
+    gap: 10px;
+    margin: 0;
+  }
+}
+
+.OsProduit.ADOC:is(.api,#resa) .contactVendeur,
+.OsProduit.ADOC:is(.api,#resa) .QuestionOrga {
+  width: auto;
+  margin: 16px 0 0;
+  padding: 16px 20px;
+  border: 1px solid var(--resa-line);
+  border-radius: var(--resa-radius-lg);
+  background: var(--resa-surface);
+  color: var(--resa-muted);
+}
+
+.OsProduit.ADOC:is(.api,#resa) .contactVendeurTitle {
+  margin: 0 0 4px;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--resa-muted);
+}
+
+.OsProduit.ADOC:is(.api,#resa) .contactVendeurInfo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 18px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .contactVendeurNom {
+  flex: 1 1 100%;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--resa-ink);
+}
+
+.OsProduit.ADOC:is(.api,#resa) .contactVendeur a,
+.OsProduit.ADOC:is(.api,#resa) .QuestionOrga a {
+  color: var(--resa-primary);
+  text-decoration: none;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .contactVendeur a:hover,
+.OsProduit.ADOC:is(.api,#resa) .QuestionOrga a:hover {
+  text-decoration: underline;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .QuestionOrga svg {
+  fill: var(--resa-faint);
+}
+
+
+/* --------------------------------------------------------------------------
+   11. Description, onglets, informations pratiques
+   -------------------------------------------------------------------------- */
+
+.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .detailbillet > .OsColGaucheInt {
+  margin-top: 28px;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .detailbillet .OsDescrProduit {
+  margin: 0 !important;
+  padding: 0 !important;
+  background: none !important;
+  font-size: 16px !important;
+  line-height: 1.65 !important;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsDescrProduit .NavOnglet {
+  display: flex;
+  gap: 28px;
+  margin: 0 0 22px;
+  padding: 0;
+  border: 0;
+  border-bottom: 1px solid var(--resa-line);
+  background: none;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsDescrProduit .NavOnglet .NavItem {
+  margin: 0 0 -1px;
+  padding: 10px 0;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: none;
+  color: var(--resa-muted);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.3;
+  cursor: pointer;
+  transition: color .15s ease, border-color .15s ease;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsDescrProduit .NavOnglet .NavItem:hover {
+  color: var(--resa-ink);
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsDescrProduit .NavOnglet .NavItem.Active {
+  border-bottom-color: var(--resa-primary);
+  color: var(--resa-ink);
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .OsBlocConteneur {
+  max-width: 70ch;
+  margin: 0;
+  padding: 0;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .detailbillet .OsTitreBloc {
+  margin: 30px 0 10px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-size: 19px;
+  font-weight: 650;
+  line-height: 1.3;
+  color: var(--resa-ink);
+  text-transform: none;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .detailbillet .OsBlocConteneur > .OsTitreBloc:first-child {
+  margin-top: 0;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .detailbillet .OsSectionInfo {
+  padding: 0;
+  color: var(--resa-text);
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .detailbillet .OsResumeProduit {
+  margin-top: 14px;
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--resa-ink);
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .detailbillet .LigneInfo {
+  gap: 4px 0;
+  padding: 5px 0;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--resa-text);
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .detailbillet .LigneInfo::before {
+  width: 22px;
+  margin: 0 10px 0 0;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--resa-muted);
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .detailbillet .LigneInfo strong {
+  font-weight: 600;
+  color: var(--resa-ink);
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .detailbillet .TagActivite {
+  align-items: center;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .detailbillet .TagActivite .Tag {
+  margin: 0 6px 0 0;
+  padding: 3px 11px;
+  border-radius: 999px;
+  background: var(--resa-primary-soft);
+  color: var(--resa-primary);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+/* Onglet « Itinéraire » */
+.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .detailbillet .InfoOrga {
+  padding: 0;
+  text-align: left;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .detailbillet .InfoOrga .Ligne {
+  display: block;
+  padding: 0;
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .detailbillet .InfoOrga .Ligne.GPS {
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--resa-muted);
+}
+
+.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .detailbillet .Osfiles ul li {
+  border-bottom-color: var(--resa-line);
+}
+
+
+/* --------------------------------------------------------------------------
+   12. Accessibilité
+   -------------------------------------------------------------------------- */
+
+.OsProduit.ADOC:is(.api,#resa) :is(a, button, [role="button"], [role="tab"], [role="navigation"]):focus-visible {
+  outline: 2px solid var(--resa-primary) !important;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .OsProduit.ADOC:is(.api,#resa) *,
+  .OsProduit.ADOC:is(.api,#resa) *::before {
+    transition: none !important;
+  }
+}
