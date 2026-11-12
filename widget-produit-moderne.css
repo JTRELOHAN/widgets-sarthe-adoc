@@ -1,6 +1,8 @@
 /* ==========================================================================
-   Widget Open System « Produit » — fiche billet ADDOCK (afficheDetailBillet)
-   Habillage moderne · à charger sur la page qui intègre le widget
+   Widget Open System « Produit » — billetterie ADDOCK
+   Habillage moderne · version 2
+   Couvre la fiche complète (afficheDetailBillet) et la carte de réservation
+   seule (widget direct sans description).
    --------------------------------------------------------------------------
    • Aucune modification du HTML n'est nécessaire.
    • L'ordre de chargement n'a pas d'importance : chaque sélecteur est préfixé
@@ -88,12 +90,12 @@
   padding: 0;
 }
 
-.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet {
+.OsProduit.ADOC:is(.api,#resa) .OsWProduitAddock:is(.AvecDescription,.SansDescription) {
   container: resa / inline-size;
   max-width: none;
 }
 
-.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .BlocDescriptionDetail {
+.OsProduit.ADOC:is(.api,#resa) .OsWProduitAddock:is(.AvecDescription,.SansDescription) .BlocDescriptionDetail {
   display: grid !important;
   grid-template-columns: minmax(0, 1fr);
   grid-template-areas:
@@ -115,21 +117,21 @@
 
 /* Les deux colonnes d'origine s'effacent : leurs enfants deviennent des
    cellules de la grille ci-dessus. */
-.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .detailbillet,
-.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .BlocMoteurReservation {
+.OsProduit.ADOC:is(.api,#resa) .OsWProduitAddock:is(.AvecDescription,.SansDescription) .detailbillet,
+.OsProduit.ADOC:is(.api,#resa) .OsWProduitAddock:is(.AvecDescription,.SansDescription) .BlocMoteurReservation {
   display: contents;
 }
 
-.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .BlocDescriptionDetail > .Titre      { grid-area: titre; }
-.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .BlocDescriptionDetail > .NomVendeur { grid-area: vendeur; }
-.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .detailbillet > .OsColDroiteInt      { grid-area: galerie; }
-.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .detailbillet > .OsColGaucheInt      { grid-area: desc; }
-.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .BlocMoteurReservation > .Cadre          { grid-area: resa; }
-.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .BlocMoteurReservation > .howTo          { grid-area: howto; }
-.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .BlocMoteurReservation > .contactVendeur { grid-area: contact; }
+.OsProduit.ADOC:is(.api,#resa) .OsWProduitAddock:is(.AvecDescription,.SansDescription) .BlocDescriptionDetail > .Titre      { grid-area: titre; }
+.OsProduit.ADOC:is(.api,#resa) .OsWProduitAddock:is(.AvecDescription,.SansDescription) .BlocDescriptionDetail > .NomVendeur { grid-area: vendeur; }
+.OsProduit.ADOC:is(.api,#resa) .OsWProduitAddock:is(.AvecDescription,.SansDescription) .detailbillet > .OsColDroiteInt      { grid-area: galerie; }
+.OsProduit.ADOC:is(.api,#resa) .OsWProduitAddock:is(.AvecDescription,.SansDescription) .detailbillet > .OsColGaucheInt      { grid-area: desc; }
+.OsProduit.ADOC:is(.api,#resa) .OsWProduitAddock:is(.AvecDescription,.SansDescription) .BlocMoteurReservation > .Cadre          { grid-area: resa; }
+.OsProduit.ADOC:is(.api,#resa) .OsWProduitAddock:is(.AvecDescription,.SansDescription) .BlocMoteurReservation > .howTo          { grid-area: howto; }
+.OsProduit.ADOC:is(.api,#resa) .OsWProduitAddock:is(.AvecDescription,.SansDescription) .BlocMoteurReservation > .contactVendeur { grid-area: contact; }
 
-.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .detailbillet > .OsColDroiteInt,
-.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .detailbillet > .OsColGaucheInt {
+.OsProduit.ADOC:is(.api,#resa) .OsWProduitAddock:is(.AvecDescription,.SansDescription) .detailbillet > .OsColDroiteInt,
+.OsProduit.ADOC:is(.api,#resa) .OsWProduitAddock:is(.AvecDescription,.SansDescription) .detailbillet > .OsColGaucheInt {
   width: auto;
   min-width: 0;
   max-width: none;
@@ -139,14 +141,14 @@
 }
 
 /* Sans description : la carte seule, centrée */
-.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet.SansDescription .BlocDescriptionDetail {
+.OsProduit.ADOC:is(.api,#resa) .OsWProduitAddock.SansDescription .BlocDescriptionDetail {
   max-width: 520px;
   margin: 0 auto;
 }
 
 /* Grand écran : contenu à gauche, carte de réservation collante à droite */
 @container resa (min-width: 860px) {
-  .OsProduit.ADOC:is(.api,#resa) .OsDetailBillet.AvecDescription .BlocDescriptionDetail {
+  .OsProduit.ADOC:is(.api,#resa) .OsWProduitAddock.AvecDescription .BlocDescriptionDetail {
     grid-template-columns: minmax(0, 1fr) minmax(320px, var(--resa-aside));
     grid-template-rows: auto auto auto auto auto auto 1fr;
     grid-template-areas:
@@ -160,13 +162,13 @@
     column-gap: 48px;
   }
 
-  .OsProduit.ADOC:is(.api,#resa) .OsDetailBillet.AvecDescription .BlocMoteurReservation > .Cadre {
+  .OsProduit.ADOC:is(.api,#resa) .OsWProduitAddock.AvecDescription .BlocMoteurReservation > .Cadre {
     position: sticky;
     top: var(--resa-sticky-top);
     margin-top: 0;
   }
 
-  .OsProduit.ADOC:is(.api,#resa) .OsDetailBillet.AvecDescription .BlocMoteurReservation > .howTo {
+  .OsProduit.ADOC:is(.api,#resa) .OsWProduitAddock.AvecDescription .BlocMoteurReservation > .howTo {
     margin-top: 40px;
   }
 }
@@ -176,7 +178,7 @@
    3. Titre et galerie
    -------------------------------------------------------------------------- */
 
-.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .BlocDescriptionDetail > .Titre {
+.OsProduit.ADOC:is(.api,#resa) .OsWProduitAddock:is(.AvecDescription,.SansDescription) .BlocDescriptionDetail > .Titre {
   margin: 0;
   padding: 0;
   font-size: 30px;
@@ -191,7 +193,7 @@
   background: none;
 }
 
-.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .BlocDescriptionDetail > .NomVendeur {
+.OsProduit.ADOC:is(.api,#resa) .OsWProduitAddock:is(.AvecDescription,.SansDescription) .BlocDescriptionDetail > .NomVendeur {
   margin: 8px 0 0;
   padding: 0;
   font-size: 15px;
@@ -199,15 +201,15 @@
   text-align: left;
 }
 
-.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .BlocDescriptionDetail > .NomVendeur:empty {
+.OsProduit.ADOC:is(.api,#resa) .OsWProduitAddock:is(.AvecDescription,.SansDescription) .BlocDescriptionDetail > .NomVendeur:empty {
   display: none;
 }
 
-.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .detailbillet > .OsColDroiteInt {
+.OsProduit.ADOC:is(.api,#resa) .OsWProduitAddock:is(.AvecDescription,.SansDescription) .detailbillet > .OsColDroiteInt {
   margin-top: 20px;
 }
 
-.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .gallery-swiper {
+.OsProduit.ADOC:is(.api,#resa) .OsWProduitAddock:is(.AvecDescription,.SansDescription) .gallery-swiper {
   max-height: none;
   padding: 0;
   border-radius: var(--resa-radius-lg);
@@ -215,11 +217,11 @@
   background: var(--resa-soft);
 }
 
-.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .gallery-swiper .swiper-slide {
+.OsProduit.ADOC:is(.api,#resa) .OsWProduitAddock:is(.AvecDescription,.SansDescription) .gallery-swiper .swiper-slide {
   max-height: none;
 }
 
-.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .gallery-swiper img {
+.OsProduit.ADOC:is(.api,#resa) .OsWProduitAddock:is(.AvecDescription,.SansDescription) .gallery-swiper img {
   display: block;
   width: 100%;
   height: auto;
@@ -228,12 +230,12 @@
   object-fit: cover;
 }
 
-.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .gallery-swiper .swiper-pagination-bullet {
+.OsProduit.ADOC:is(.api,#resa) .OsWProduitAddock:is(.AvecDescription,.SansDescription) .gallery-swiper .swiper-pagination-bullet {
   background: #fff;
   opacity: .6;
 }
 
-.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .gallery-swiper .swiper-pagination-bullet-active {
+.OsProduit.ADOC:is(.api,#resa) .OsWProduitAddock:is(.AvecDescription,.SansDescription) .gallery-swiper .swiper-pagination-bullet-active {
   opacity: 1;
 }
 
@@ -242,7 +244,7 @@
    4. Carte de réservation
    -------------------------------------------------------------------------- */
 
-.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .BlocMoteurReservation > .Cadre {
+.OsProduit.ADOC:is(.api,#resa) .OsWProduitAddock:is(.AvecDescription,.SansDescription) .BlocMoteurReservation > .Cadre {
   position: relative;
   margin: 20px 0 0;
   padding: 24px;
@@ -253,7 +255,7 @@
 }
 
 @container resa (max-width: 420px) {
-  .OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .BlocMoteurReservation > .Cadre {
+  .OsProduit.ADOC:is(.api,#resa) .OsWProduitAddock:is(.AvecDescription,.SansDescription) .BlocMoteurReservation > .Cadre {
     padding: 18px;
   }
 }
@@ -1188,17 +1190,17 @@
 
 /* Trois étapes côte à côte quand la place le permet */
 @container resa (min-width: 620px) {
-  .OsProduit.ADOC:is(.api,#resa) .OsDetailBillet.AvecDescription .howTo {
+  .OsProduit.ADOC:is(.api,#resa) .OsWProduitAddock.AvecDescription .howTo {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 0 24px;
   }
 
-  .OsProduit.ADOC:is(.api,#resa) .OsDetailBillet.AvecDescription .howTo .howToTitle {
+  .OsProduit.ADOC:is(.api,#resa) .OsWProduitAddock.AvecDescription .howTo .howToTitle {
     grid-column: 1 / -1;
   }
 
-  .OsProduit.ADOC:is(.api,#resa) .OsDetailBillet.AvecDescription .howTo .howToStep {
+  .OsProduit.ADOC:is(.api,#resa) .OsWProduitAddock.AvecDescription .howTo .howToStep {
     flex-direction: column;
     gap: 10px;
     margin: 0;
@@ -1259,11 +1261,11 @@
    11. Description, onglets, informations pratiques
    -------------------------------------------------------------------------- */
 
-.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .detailbillet > .OsColGaucheInt {
+.OsProduit.ADOC:is(.api,#resa) .OsWProduitAddock:is(.AvecDescription,.SansDescription) .detailbillet > .OsColGaucheInt {
   margin-top: 28px;
 }
 
-.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .detailbillet .OsDescrProduit {
+.OsProduit.ADOC:is(.api,#resa) .OsWProduitAddock:is(.AvecDescription,.SansDescription) .detailbillet .OsDescrProduit {
   margin: 0 !important;
   padding: 0 !important;
   background: none !important;
@@ -1304,13 +1306,13 @@
   color: var(--resa-ink);
 }
 
-.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .OsBlocConteneur {
+.OsProduit.ADOC:is(.api,#resa) .OsWProduitAddock:is(.AvecDescription,.SansDescription) .OsBlocConteneur {
   max-width: 70ch;
   margin: 0;
   padding: 0;
 }
 
-.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .detailbillet .OsTitreBloc {
+.OsProduit.ADOC:is(.api,#resa) .OsWProduitAddock:is(.AvecDescription,.SansDescription) .detailbillet .OsTitreBloc {
   margin: 30px 0 10px;
   padding: 0;
   border: 0;
@@ -1322,23 +1324,23 @@
   text-transform: none;
 }
 
-.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .detailbillet .OsBlocConteneur > .OsTitreBloc:first-child {
+.OsProduit.ADOC:is(.api,#resa) .OsWProduitAddock:is(.AvecDescription,.SansDescription) .detailbillet .OsBlocConteneur > .OsTitreBloc:first-child {
   margin-top: 0;
 }
 
-.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .detailbillet .OsSectionInfo {
+.OsProduit.ADOC:is(.api,#resa) .OsWProduitAddock:is(.AvecDescription,.SansDescription) .detailbillet .OsSectionInfo {
   padding: 0;
   color: var(--resa-text);
 }
 
-.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .detailbillet .OsResumeProduit {
+.OsProduit.ADOC:is(.api,#resa) .OsWProduitAddock:is(.AvecDescription,.SansDescription) .detailbillet .OsResumeProduit {
   margin-top: 14px;
   font-size: 17px;
   line-height: 1.55;
   color: var(--resa-ink);
 }
 
-.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .detailbillet .LigneInfo {
+.OsProduit.ADOC:is(.api,#resa) .OsWProduitAddock:is(.AvecDescription,.SansDescription) .detailbillet .LigneInfo {
   gap: 4px 0;
   padding: 5px 0;
   font-size: 15px;
@@ -1346,7 +1348,7 @@
   color: var(--resa-text);
 }
 
-.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .detailbillet .LigneInfo::before {
+.OsProduit.ADOC:is(.api,#resa) .OsWProduitAddock:is(.AvecDescription,.SansDescription) .detailbillet .LigneInfo::before {
   width: 22px;
   margin: 0 10px 0 0;
   font-size: 16px;
@@ -1354,16 +1356,16 @@
   color: var(--resa-muted);
 }
 
-.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .detailbillet .LigneInfo strong {
+.OsProduit.ADOC:is(.api,#resa) .OsWProduitAddock:is(.AvecDescription,.SansDescription) .detailbillet .LigneInfo strong {
   font-weight: 600;
   color: var(--resa-ink);
 }
 
-.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .detailbillet .TagActivite {
+.OsProduit.ADOC:is(.api,#resa) .OsWProduitAddock:is(.AvecDescription,.SansDescription) .detailbillet .TagActivite {
   align-items: center;
 }
 
-.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .detailbillet .TagActivite .Tag {
+.OsProduit.ADOC:is(.api,#resa) .OsWProduitAddock:is(.AvecDescription,.SansDescription) .detailbillet .TagActivite .Tag {
   margin: 0 6px 0 0;
   padding: 3px 11px;
   border-radius: 999px;
@@ -1375,23 +1377,23 @@
 }
 
 /* Onglet « Itinéraire » */
-.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .detailbillet .InfoOrga {
+.OsProduit.ADOC:is(.api,#resa) .OsWProduitAddock:is(.AvecDescription,.SansDescription) .detailbillet .InfoOrga {
   padding: 0;
   text-align: left;
 }
 
-.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .detailbillet .InfoOrga .Ligne {
+.OsProduit.ADOC:is(.api,#resa) .OsWProduitAddock:is(.AvecDescription,.SansDescription) .detailbillet .InfoOrga .Ligne {
   display: block;
   padding: 0;
 }
 
-.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .detailbillet .InfoOrga .Ligne.GPS {
+.OsProduit.ADOC:is(.api,#resa) .OsWProduitAddock:is(.AvecDescription,.SansDescription) .detailbillet .InfoOrga .Ligne.GPS {
   margin-top: 6px;
   font-size: 13px;
   color: var(--resa-muted);
 }
 
-.OsProduit.ADOC:is(.api,#resa) .OsDetailBillet .detailbillet .Osfiles ul li {
+.OsProduit.ADOC:is(.api,#resa) .OsWProduitAddock:is(.AvecDescription,.SansDescription) .detailbillet .Osfiles ul li {
   border-bottom-color: var(--resa-line);
 }
 
